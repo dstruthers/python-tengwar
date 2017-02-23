@@ -136,8 +136,7 @@ def m_n_patterns(input):
     
 @parser
 def r_before_vowel(input):
-    r = input.match('r')
-    input.match(peek(vowel))
+    input.match('r' + peek(vowel))
     return glyphs.romen
 
 # We also treat the case of a <RR> followed by a vowel separately, to guarantee
@@ -147,7 +146,8 @@ def r_before_vowel(input):
 
 @parser
 def double_r_before_vowel(input):
-    input.match('r' + r_before_vowel)
+    input.match('r')
+    input.match(r_before_vowel)
     return glyphs.romen + diacritics.underbar
 
 # The exception to the R Rule is when the vowel followed by <R> is at the end of

@@ -1,5 +1,5 @@
 import parsing
-from diacritics import Tehta
+from tengwar.orthography.diacritics import Tehta
 
 class Tengwa():
     def __init__(self, name, tehtar=[]):

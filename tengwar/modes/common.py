@@ -1,8 +1,7 @@
-import diacritics
-import glyphs
+from tengwar.orthography import diacritics, glyphs
 from parsing import *
 
-from helpers import base12, many1, mapping
+from tengwar.misc.helpers import base12, many1, mapping
 
 __all__ = ['transliterate']
 __author__ = 'Darren M. Struthers <dstruthers@gmail.com>'
@@ -359,7 +358,7 @@ special_form = ( mapping('of', glyphs.of)
 
 # Let any unrecognizable input pass through
 
-passthrough = char
+passthrough = char >> glyphs.Unknown
 
 # Plug it all together
 word = many1(vowel_patterns | consonant_patterns)

@@ -1,6 +1,6 @@
-from tengwar import transliterate
-from glyphs import *
-from diacritics import *
+from tengwar.modes.common import transliterate
+from tengwar.orthography.glyphs import *
+from tengwar.orthography.diacritics import *
 
 def test_digraphs():
     assert(transliterate('chi') == calma + short_carrier + overdot)

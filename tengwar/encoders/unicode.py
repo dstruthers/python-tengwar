@@ -1,5 +1,5 @@
-from diacritics2 import *
-from glyphs2 import *
+from tengwar.orthography.diacritics import *
+from tengwar.orthography.glyphs import *
 
 unicode_mappings = {
     tinco.name : '\ue000',
@@ -71,7 +71,11 @@ unicode_mappings = {
 }
 
 def encode_tengwa(tengwa):
-    return unicode_mappings[tengwa.name] + ''.join([unicode_mappings[t.name] for t in tengwa.tehtar])
+    if isinstance(tengwa, Unknown):
+        return tengwa.value
+    else:
+        return (unicode_mappings[tengwa.name]
+                + ''.join([unicode_mappings[t.name] for t in tengwa.tehtar]))
 
 def encode(tengwar):
     return ''.join(map(encode_tengwa, tengwar.tengwar))

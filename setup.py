@@ -7,7 +7,10 @@ setup(name='tengwar',
       py_modules=['tengwar'],
       description='Tengwar transliteration library',
       license='MIT',
-      install_requires=['parsing'],
+      install_requires=[
+          'bidict',
+          'parsing'
+      ],
       tests_require=['pytest'],
       dependency_links=['https://github.com/dstruthers/python-parsing/tarball/master#egg=parsing']
       )

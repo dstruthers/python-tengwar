@@ -1,1 +1,3 @@
+bidict
+pytest
 -e git://github.com/dstruthers/python-parsing.git#egg=parsing-master

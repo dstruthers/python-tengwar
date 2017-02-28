@@ -1,4 +1,3 @@
-import parsing
 from tengwar.orthography.diacritics import Tehta
 
 class Tengwa():
@@ -22,10 +21,6 @@ class Tengwa():
             return self.__class__(self.tehtar | set([other]))
         elif isinstance(other, Tengwar):
             return Tengwar([self] + other.tengwar)
-        elif isinstance(other, parsing.Partial):
-            print('result=', other.result.result)
-            print('input=', other.remainder)
-            raise TypeError
         else:
             raise TypeError
 

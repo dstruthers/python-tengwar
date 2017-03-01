@@ -351,8 +351,8 @@ number = many1(digit) >> int >> base12 >> many(numeral)
 #
 # Tengwar has special glyphs for the common words, <OF>, <THE>, and <OF THE>.
 
-special_form = ( mapping('of', glyphs.of)
-               | mapping('of the', glyphs.of_the)
+special_form = ( mapping('of the', glyphs.of + diacritics.underbar)
+               | mapping('of', glyphs.of)
                | mapping('the', glyphs.the)
 ) + peek(boundary)
 

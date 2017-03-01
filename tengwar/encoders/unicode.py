@@ -45,8 +45,8 @@ unicode_mappings = bidict({
     LongCarrier : '\ue02d',
     The : '\ue01c',
     Of : '\ue01d',
-    OfThe : '\ue01d\ue051',
-    AspiratedParma : '\ue019', # used for 'ph'
+#    OfThe : '\ue01d\ue051',
+    AspiratedParma : '\ue019',
     Numeral0 : '\ue070',
     Numeral1 : '\ue071',
     Numeral2 : '\ue072',
@@ -69,27 +69,26 @@ unicode_mappings = bidict({
     LeftCurl : '\ue04c',
     RightHook : '\ue058',
     LeftHook : '\ue059',
-    Overbar : '\ue0050',
+    Overbar : '\ue050',
     Underbar : '\ue051'
 })
 
-def encode_tengwa(tengwa):
-    if isinstance(tengwa, Unknown):
-        return tengwa.value
-    else:
-        return (unicode_mappings[tengwa.__class__]
-                + ''.join([unicode_mappings[t.__class__] for t in tengwa.tehtar]))
-
-def decode_tengwa(char):
-    if char in unicode_mappings.inv:
-        return unicode_mappings.inv[char]()
-    else:
-        return Unknown(char)
-    
 def encode(tengwar):
-    #return ''.join(map(encode_tengwa, tengwar.tengwar))
-    return ''.join([encode_tengwa(t) for t in tengwar])
+    output = ''
+    for tengwa in tengwar:
+        if isinstance(tengwa, Unknown):
+            output += tengwa.value
+        else:
+            output += unicode_mappings[tengwa.__class__]
+            for tehta in tengwa.tehtar:
+                output += unicode_mappings[tehta.__class__]
+    return output
 
 def decode(chars):
-    return reduce(lambda x, y: x + y, map(decode_tengwa, chars))
-    #return reduce(lambda x, y: x + y, [decode_tengwa(c) for c in chars])
+    output = Tengwar()
+    for char in chars:
+        if char in unicode_mappings.inv:
+            output += unicode_mappings.inv[char]()
+        else:
+            output += Unknown(char)
+    return output

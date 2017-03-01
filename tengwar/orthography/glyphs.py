@@ -22,11 +22,11 @@ class Tengwa():
         elif isinstance(other, Tengwar):
             return Tengwar([self] + other.tengwar)
         else:
-            raise TypeError
+            return NotImplemented
 
     def __eq__(self, other):
         if isinstance(other, Tengwa):
-            return self.name == other.name and self.tehtar == other.tehtar
+            return type(self) == type(other) and self.tehtar == other.tehtar
 
     def __iter__(self):
         self._iterated = False
@@ -89,7 +89,6 @@ class ShortCarrier(Tengwa): name = 'Short carrier'
 class LongCarrier(Tengwa): name = 'Long carrier'
 class The(Tengwa): name = 'The'
 class Of(Tengwa): name = 'Of'
-class OfThe(Tengwa): name = 'Of The'
 class AspiratedParma(Tengwa): name = 'Parma with long stem'
 
 class Numeral0(Tengwa): name = 'Numeral 0'
@@ -109,6 +108,9 @@ class Unknown(Tengwa):
     def __init__(self, value):
         self.value = str(value)
 
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.value == other.value
+
     def __repr__(self):
         return repr(self.value)
 
@@ -117,13 +119,15 @@ class Unknown(Tengwa):
 
 class Tengwar(object):
     """List of Tengwa instances"""
-    def __init__(self, tengwar):
+    def __init__(self, tengwar=[]):
         self.tengwar = tengwar
         self._iter_index = 0
 
     def __eq__(self, other):
         if isinstance(other, Tengwar):
             return self.tengwar == other.tengwar
+        elif isinstance(other, Tengwa):
+            return self.tengwar == [other]
 
     def __repr__(self):
         return ''.join([str(tengwa) for tengwa in self.tengwar])
@@ -134,7 +138,10 @@ class Tengwar(object):
         elif isinstance(other, Tengwa):
             return Tengwar(self.tengwar + [other])
         elif isinstance(other, Tehta):
-            self.tengwar[-1] += other
+            if len(self.tengwar):
+                self.tengwar[-1] += other
+            else:
+                self.tengwar = [ShortCarrier(), other]
             return self
         else:
             raise TypeError
@@ -205,9 +212,7 @@ short_carrier = ShortCarrier()
 long_carrier = LongCarrier()
 
 the = The()
-
 of = Of()
-of_the = OfThe()
 
 aspirated_parma = AspiratedParma()
 

@@ -1,7 +1,54 @@
+import pytest
+
+from tengwar.encoders.unicode import decode, encode
 from tengwar.modes.common import transliterate
 from tengwar.orthography.glyphs import *
 from tengwar.orthography.diacritics import *
 
+# Tests for tengwar.orthography
+def test_tengwa_equality():
+    assert(tinco == tinco)
+    assert(tinco != parma)
+
+def test_tengwa_with_tehtar_equality():
+    assert(tinco + triple_dot == tinco + triple_dot)
+    assert(tinco + acute_accent != tinco + triple_dot)
+
+def test_tengwar_equality():
+    assert(Tengwar([ando, malta, silme]) == Tengwar([ando, malta, silme]))
+    assert(Tengwar([ando + triple_dot, malta, silme]) != Tengwar([ando, malta, silme]))
+
+def test_tengwa_plus_tengwa():
+    assert(tinco + parma == Tengwar([tinco, parma]))
+
+def test_tengwa_plus_tehta():
+    assert(tinco + triple_dot == Tinco([TripleDot()]))
+
+def test_tengwar_plus_tengwa():
+    assert(Tengwar([tinco, parma]) + calma == Tengwar([tinco, parma, calma]))
+    assert(tinco + Tengwar([parma, calma]) == Tengwar([tinco, parma, calma]))
+
+def test_tengwar_plus_tengwar():
+    assert(Tengwar([tinco]) + Tengwar([parma]) == Tengwar([tinco, parma]))
+
+def test_tengwa_plus_tengwa_associativity():
+    assert(tinco + (parma + calma) == (tinco + parma) + calma)
+
+def test_tengwa_plus_tengwa_commutativity():
+    assert(tinco + parma != parma + tinco)
+
+def test_tengwa_plus_tehtar_commutativity():
+    assert(tinco + acute_accent + overbar == tinco + overbar + acute_accent)
+
+@pytest.mark.xfail(raises=TypeError)
+def test_tehta_plus_tengwa_failure_1():
+    triple_dot + tinco
+
+@pytest.mark.xfail(raises=TypeError)
+def test_tehta_plus_tengwa_failure_2():
+    TripleDot() + Tinco()
+
+# Tests for tengwar.modes.common
 def test_digraphs():
     assert(transliterate('chi') == calma + short_carrier + overdot)
     assert(transliterate('ugh') == unque + left_curl)
@@ -109,3 +156,8 @@ def test_numbers():
     assert(transliterate('12') == numeral_1 + numeral_0)
     assert(transliterate('100') == numeral_8 + numeral_4)
     assert(transliterate('1000') == numeral_6 + numeral_b + numeral_4)
+
+# Tests for tengwar.encoders.unicode
+def test_encode_decode_inverse():
+    phrase = 'The Lord of the Rings'
+    assert(transliterate(phrase) == decode(encode(transliterate(phrase))))
